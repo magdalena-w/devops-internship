@@ -10,7 +10,7 @@ function print_usage() {
 }
 
 function encrypt() {
-    sed "y/$a$b/${a:$shift_value}${a::$shift_value}${b:$shift_value}${b::$shift_value}/" "$input_file" > "$output_file"
+    sed "y/$a/${a:$shift_value}${a::$shift_value}/; y/$b/${b:$shift_value}${b::$shift_value}/" "$input_file" > "$output_file"
 }
 
 while getopts 's:i:o:' flag; do
