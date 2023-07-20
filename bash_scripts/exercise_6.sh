@@ -11,7 +11,7 @@
 # 8) total and free RAM;
 # 9) number and frequency of CPU cores
 
-function seperate_sections {
+function separate_sections {
     echo "--------------------------"
     echo ""
 } >> report_file.txt
@@ -19,44 +19,45 @@ function seperate_sections {
 function generate_report {
     echo "--------------------------"
     echo "| This is the report file |"
-    seperate_sections
+    separate_sections
 
     echo "1) Current date and time:"
     date
-    seperate_sections
+    separate_sections
     
     echo "2) Name of the current user:"
     echo "$USER"
-    seperate_sections
+    separate_sections
 
     echo "3) Internal IP address and hostname:"
-    ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'
+    ip addr | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'
     echo "$HOSTNAME"
-    seperate_sections
+    separate_sections
 
     echo "4) External IP address:" 
     curl https://checkip.amazonaws.com 
-    seperate_sections
+    separate_sections
 
     echo "5) Name and version of Linux distribution:" 
-    uname -v 
-    seperate_sections
+    uname -a 
+    separate_sections
     
     echo "6) System uptime:" 
     uptime 
-    seperate_sections
+    separate_sections
 
     echo "7) Used and free space (in GB):" 
     df -h 
-    seperate_sections
+    separate_sections
 
     echo "8) Total and free RAM:" 
     free -h 
-    seperate_sections
+    separate_sections
 
     echo "9) Number and frequency of CPU cores:" 
     lscpu | grep "CPU(s)" 
-    lscpu | grep "CPU Mhz" 
-    seperate_sections
-} >> report_file.txt
-generate_report
+    lscpu | grep "Mhz" 
+    separate_sections
+} 
+
+generate_report >> report_file.txt
