@@ -1,20 +1,23 @@
 #!/bin/bash
 
-function fibonacci() {
-	N=$1
-	f0=0
-	f1=1
+function fib {
+    local num=$1
 
-	echo "The Fibonacci series for $N is: "
+    if [ $num -eq 0 ]; then
+        echo 0
+    elif [ $num -eq 1 ]; then
+        echo 1
+    elif [ $num -gt 1 ]; then
+        ans=$(( $(fib $((num-1))) + $(fib $((num-2))) ))
+        echo $ans
+    else
+        echo "You can only type positive numbers."
+    fi
+    }
 
-	for (( i=0; i<N; i++ ))
-	do
-		echo -n "$f0 "
-		fn=$((f0 + f1))
-		f0=$f1
-		f1=$fn
-	done
-}
+read -p "Enter how many numbers do you want of Fibonacci series: " n
 
-read -p "Enter how many numbers do you want of Fibonacci series: " numbers
-fibonacci $numbers
+res=$(fib $n)
+
+echo "The Fibonacci series for $n is: $res"
+
