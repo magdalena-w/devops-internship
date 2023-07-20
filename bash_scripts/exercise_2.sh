@@ -27,7 +27,7 @@ function subtraction {
 }
 
 function multiplication {
-    res=0
+    res=1
     for k in "${numbers_array[@]}"; do
         res=$((res * k))
     done
@@ -61,7 +61,7 @@ while getopts ${optstring} arg; do
         fi
         ;;
 		n) # Handle the -n flag 
-        numbers+=${OPTARG}
+        numbers+="${OPTARG},"
         IFS=', ' read -r -a numbers_array <<< "$numbers"
         ;;
 		d) # Handle the -d flag
@@ -72,6 +72,7 @@ while getopts ${optstring} arg; do
 		;;
         *)
         echo "Usage: $0 [-o operation_parameter] [-n sequence_of_numbers] [-d debug_flag]" 
+        exit 1
 	esac
 done
 
