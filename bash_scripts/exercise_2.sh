@@ -11,7 +11,7 @@
 optstring="o:n:d"
 
 function addition {
-    res=0
+    local res=0
     for k in "${numbers_array[@]}"; do
         res=$((res + k ))
     done
@@ -19,7 +19,7 @@ function addition {
 }
 
 function subtraction {
-    res=${numbers_array[0]}
+    local res=${numbers_array[0]}
     for k in "${numbers_array[@]:1}"; do
         res=$((res - k))
     done
@@ -27,7 +27,7 @@ function subtraction {
 }
 
 function multiplication {
-    res=1
+    local res=1
     for k in "${numbers_array[@]}"; do
         res=$((res * k))
     done
@@ -35,7 +35,7 @@ function multiplication {
 }
 
 function modulo {
-    res=${numbers_array[0]}
+    local res=${numbers_array[0]}
     for k in "${numbers_array[@]:1}"; do
         res=$(( res%k ))
     done
@@ -48,16 +48,12 @@ while getopts ${optstring} arg; do
         op_parameter=${OPTARG}
         if [ "$op_parameter" = "-" ]; then
             operation="subtraction"
-            subtraction
         elif [ "$op_parameter" = "+" ]; then
             operation="addition"
-            addition
         elif [ "$op_parameter" = "*" ]; then
             operation="multiplication"
-            multiplication
         elif [ "$op_parameter" = "%" ]; then
             operation="modulo"
-            modulo
         fi
         ;;
 		n) # Handle the -n flag 
@@ -69,7 +65,21 @@ while getopts ${optstring} arg; do
         echo "Name of the script: $0"
         echo "Operation: $operation"
         echo "Numbers: ${numbers_array[*]}"
-		;;
+        case "$operation" in
+                "addition")
+                    addition "${numbers_array[@]}"
+                    ;;
+                "subtraction")
+                    subtraction "${numbers_array[@]}"
+                    ;;
+                "multiplication")
+                    multiplication "${numbers_array[@]}"
+                    ;;
+                "modulo")
+                    modulo "${numbers_array[@]}"
+                    ;;
+        esac
+        ;;
         *)
         echo "Usage: $0 [-o operation_parameter] [-n sequence_of_numbers] [-d debug_flag]" 
         exit 1
