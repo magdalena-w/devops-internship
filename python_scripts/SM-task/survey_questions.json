@@ -1,0 +1,73 @@
+{
+   "Capybara_Survey": {
+      "Page1": {
+         "Question1": {
+            "Description" : "Have you ever seen a capybara in person?",
+            "Answers" : [
+               "Yes",
+               "No"
+            ]
+         },
+         "Question2": {
+            "Description" : "On a scale of 1 to 5, how much do you know about capybaras?",
+            "Answers" : [
+               "1 - Very little",
+               "2 - Somewhat knowledgeable",
+               "3 - Moderately knowledgeable",
+               "4 - Quite knowledgeable",
+               "5 - Very knowledgeable"
+            ]
+         },
+         "Question3": {
+            "Description" : "Which of the following word would you use to describe capybaras?",
+            "Answers" : [
+               "Cute",
+               "Friendly",
+               "Social",
+               "Giant",
+               "Aquatic",
+               "Chill",
+               "Unusual"
+            ]
+         }
+      },
+      "Page2": {
+         "Question4": {
+            "Description" : "What fascinates you the most about capybaras?",
+            "Answers" : [
+               "Their social behavior",
+               "Their appearance",
+               "Their habitat",
+               "Their unique characteristics",
+               "I'm not fascinated by capybaras"
+            ]
+         },
+         "Question5": {
+            "Description" : "Do you think capybaras make good pets?",
+            "Answers" : [
+               "Yes",
+               "No",
+               "Not sure"
+            ]
+         },
+         "Question6": {
+            "Description" : "Have you ever shared information or media about capybaras on social media platforms?",
+            "Answers" : [
+               "Yes, frequently",
+               "Yes, occasionally",
+               "No, but I enjoy seeing others' posts",
+               "No, I'm not interested in capybaras on social media"
+            ]
+         },
+         "Question7": {
+            "Description" : "Would you like to learn more about capybaras and their conservation efforts?",
+            "Answers" : [
+               "Yes, definitely",
+               "Maybe, if it's interesting",
+               "No, I'm not interested"
+            ]
+         }
+      }
+   }
+}
+
