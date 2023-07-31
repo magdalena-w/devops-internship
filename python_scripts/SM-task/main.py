@@ -55,6 +55,41 @@ def create_survey(survey_title, pages):
 
     return survey_id
 
+def create_collector(survey_id):
+    collector_data = {
+        'type': 'email',
+        'name': 'Email Collector',  # You can change the name of the collector as needed
+        'thank_you_message': 'Thank you for taking the survey!',
+        'close_date': None  # You can set a close date for the collector if desired
+    }
+    headers = {
+        'Authorization': f'Bearer {ACCESS_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.post(BASE_URL + f'surveys/{survey_id}/collectors', headers=headers, json=collector_data)
+    if response.status_code != 201:
+        print(f"Failed to create collector. Error: {response.text}")
+        return None
+
+    collector_id = response.json()['id']
+    return collector_id
+
+def send_email_invitations(collector_id, email_list):
+    for email in email_list:
+        invitation_data = {
+            'recipients': {
+                'type': 'email',
+                'email': email,
+            }
+        }
+        headers = {
+            'Authorization': f'Bearer {ACCESS_TOKEN}',
+            'Content-Type': 'application/json'
+        }
+        response = requests.post(BASE_URL + f'collectors/{collector_id}/messages', headers=headers, json=invitation_data)
+        if response.status_code != 201:
+            print(f"Failed to send email invitation to {email}. Error: {response.text}")
+
 def main():
     with open('survey_questions.json') as file:
         survey_data = json.load(file)
@@ -65,6 +100,14 @@ def main():
     survey_id = create_survey(survey_title, pages)
     if survey_id:
         print(f"Survey '{survey_title}' with ID {survey_id} created successfully!")
+
+        with open('email_addresses.txt', 'r') as email_file:
+            email_list = email_file.read().splitlines()
+
+        collector_id = create_collector(survey_id)
+        if collector_id:
+            send_email_invitations(collector_id, email_list)
+            print(f"Email invitations sent to {len(email_list)} recipients!")
 
 if __name__ == "__main__":
     main()
