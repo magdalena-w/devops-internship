@@ -11,6 +11,7 @@ load_dotenv()
 ACCESS_TOKEN = os.getenv('SM_ACCESS_TOKEN')
 BASE_URL = 'https://api.surveymonkey.com/v3/'
 
+
 def create_survey(survey_title, pages):
     # Create a new survey
     survey_data = {
@@ -59,8 +60,7 @@ def create_collector(survey_id):
     collector_data = {
         'type': 'email',
         'name': 'Email Collector',  # You can change the name of the collector as needed
-        'thank_you_message': 'Thank you for taking the survey!',
-        'close_date': None  # You can set a close date for the collector if desired
+        'thank_you_message': 'Thank you for taking the survey!'
     }
     headers = {
         'Authorization': f'Bearer {ACCESS_TOKEN}',
@@ -74,40 +74,72 @@ def create_collector(survey_id):
     collector_id = response.json()['id']
     return collector_id
 
-def send_email_invitations(collector_id, email_list):
-    for email in email_list:
-        invitation_data = {
-            'recipients': {
-                'type': 'email',
-                'email': email,
-            }
-        }
-        headers = {
-            'Authorization': f'Bearer {ACCESS_TOKEN}',
-            'Content-Type': 'application/json'
-        }
-        response = requests.post(BASE_URL + f'collectors/{collector_id}/messages', headers=headers, json=invitation_data)
-        if response.status_code != 201:
-            print(f"Failed to send email invitation to {email}. Error: {response.text}")
+def create_email(survey_id, collector_id):
+    invitation_data = {
+        'type': 'invite',
+        'subject': 'Share your opinion about capybaras with me',
+    }
+
+    headers = {
+        'Authorization': f'Bearer {ACCESS_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.post(BASE_URL + f'surveys/{survey_id}/collectors/{collector_id}/messages', headers=headers, json=invitation_data)
+    if response.status_code != 201:
+        print(f"Failed to create email. Error: {response.text}")
+        return None
+
+    message_id = response.json()['id']
+    return message_id
+
+def add_recipients(survey_id, collector_id, message_id, email_list):
+    recipients_data = {
+        'contacts': [{'email': email} for email in email_list]
+    }
+    
+    headers = {
+        'Authorization': f'Bearer {ACCESS_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.post(BASE_URL + f'surveys/{survey_id}/collectors/{collector_id}/messages/{message_id}/recipients/bulk', headers=headers, json=recipients_data)
+    if response.status_code != 200:
+        print(f"Failed to add recipients. Error {response.text}")
+        return None
+
+    return recipients_data
+
+def send_email(survey_id, collector_id, message_id):
+    send_data = {}
+
+    headers = {
+        'Authorization': f'Bearer {ACCESS_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.post(BASE_URL + f'surveys/{survey_id}/collectors/{collector_id}/messages/{message_id}/send', headers=headers, json=send_data)
+    if response.status_code != 200:
+        print(f"Failed to send email. Error {response.text}")
+        return None
 
 def main():
     with open('survey_questions.json') as file:
         survey_data = json.load(file)
-
     survey_title = list(survey_data.keys())[0]
     pages = survey_data[survey_title]
 
     survey_id = create_survey(survey_title, pages)
     if survey_id:
         print(f"Survey '{survey_title}' with ID {survey_id} created successfully!")
-
-        with open('email_addresses.txt', 'r') as email_file:
-            email_list = email_file.read().splitlines()
-
         collector_id = create_collector(survey_id)
         if collector_id:
-            send_email_invitations(collector_id, email_list)
-            print(f"Email invitations sent to {len(email_list)} recipients!")
+            message_id = create_email(survey_id, collector_id)
+        
+        with open('email_addresses.txt', 'r') as email_file:
+            email_list = email_file.read().splitlines()
+            add_recipients(survey_id, collector_id, message_id, email_list)
+            send_email(survey_id, collector_id, message_id)
 
 if __name__ == "__main__":
     main()
