@@ -18,7 +18,7 @@ parser.add_argument("-f", "--filename", help="Name of the file you want to check
 args = parser.parse_args()
 
 try:
-    splited_str = re.split('\.', args.filename)
+    splited_str = re.split(r"\.", args.filename)
     if splited_str[0] == '':
         print(f"File '{args.filename}' is a hidden file.")
     else:

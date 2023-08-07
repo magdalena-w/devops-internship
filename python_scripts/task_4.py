@@ -13,15 +13,16 @@ Author:
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Count occurences of all characters withina  string')
-parser.add_argument('-w', '--word')
+parser = argparse.ArgumentParser(
+    description="Count occurences of all characters withina  string"
+)
+parser.add_argument("-w", "--word")
 args = parser.parse_args()
 
 word_set = set(args.word)
-count_of_chars = dict()
+count_of_chars = {}
 
 for elem in word_set:
     count_char = args.word.count(elem)
     count_of_chars[elem] = count_char
 print(f"Count of characters is: {count_of_chars}")
-

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-"""Transforms given list of integers into a tuple and prints information about minimum and maximum value in the tuple.
+"""Transforms given list of integers into a tuple 
+    and prints information about minimum and maximum value inside this tuple.
 
 Usage:
         ./task_2.py [-l --list num1 num2 num3]
