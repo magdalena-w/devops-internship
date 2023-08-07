@@ -13,7 +13,15 @@ BASE_URL = 'https://api.surveymonkey.com/v3/'
 
 
 def create_survey(survey_title, pages):
-    # Create a new survey
+    """
+    Create a new survey on SurveyMonkey.
+    Args:
+        survey_title (str): The title of the survey
+        pages (dict): A dictionary containing page titles as keys and questions as values.
+    Returns:
+        str: The ID of the created survey if successfull, None otherwise.
+    """
+
     survey_data = {
         'title': survey_title
     }
@@ -57,6 +65,14 @@ def create_survey(survey_title, pages):
     return survey_id
 
 def create_collector(survey_id):
+    """
+    Create a new collector for the survey.
+    Args:
+        survey_id (str): The ID of the survey.
+    Returns:
+        str: The ID of the created collector if successfull, None otherwise.
+    """
+
     collector_data = {
         'type': 'email',
         'name': 'Email Collector',  # You can change the name of the collector as needed
@@ -75,6 +91,15 @@ def create_collector(survey_id):
     return collector_id
 
 def create_email(survey_id, collector_id):
+    """
+    Create an email message for the survey collector.
+    Args:
+        survey_id (str): The ID of the survey.
+        collector_id (str): The ID of the collector.
+    Returns:
+        str: The ID of the created email message if successfull, None otherwise.
+    """
+
     invitation_data = {
         'type': 'invite',
         'subject': 'Share your opinion about capybaras with me',
@@ -94,6 +119,17 @@ def create_email(survey_id, collector_id):
     return message_id
 
 def add_recipients(survey_id, collector_id, message_id, email_list):
+    """
+    Add recipients to the survey email message.
+    Args:
+        survey_id (str): The ID of the survey.
+        collector_id (str): The ID of the collector.
+        message_id (str): The ID of the email message.
+        email_list (list): A list of email addresses of recipients.
+    Returns:
+        dict: The recipient data if successfull, None otherwise.
+    """
+
     recipients_data = {
         'contacts': [{'email': email} for email in email_list]
     }
@@ -111,6 +147,14 @@ def add_recipients(survey_id, collector_id, message_id, email_list):
     return recipients_data
 
 def send_email(survey_id, collector_id, message_id):
+    """
+    Send the survey email message to recipients.
+    Args:
+        survey_id (str): The ID of the survey.
+        collector_id (str): The ID of the collector.
+        message_id (str): The ID of the email message.
+    """
+
     send_data = {}
 
     headers = {
@@ -124,6 +168,10 @@ def send_email(survey_id, collector_id, message_id):
         return None
 
 def main():
+    """
+    Main function to create and send a survey.
+    """
+
     with open('survey_questions.json') as file:
         survey_data = json.load(file)
     survey_title = list(survey_data.keys())[0]
